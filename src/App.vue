@@ -1,33 +1,50 @@
 <script setup>
 import { ref, reactive } from 'vue'
 
-const titulo = ref('Título');
-const produto = reactive ({
+const titulo = ref('Título')
+const mostrarResultado = ref(false)
+const produto = reactive({
   nome: 'Produto',
   preco: 19.99,
   quantidade: 10,
   categorias: []
 })
-
+function formatarPreco(preco) {
+  return `R$ ${produto.preco.toFixed(2).replace('.', ',')}`
+}
 </script>
-
 <template>
   <h1>{{ titulo }}</h1>
   <div class="container">
     <div class="formulario">
       <h2>Formulário</h2>
-      <input type="text" v-model="titulo"/>
+      <input type="text" v-model="titulo" />
+      <form @submit.prevent="mostrarResultado = !mostrarResultado">
+        <div class="row">
+          <label for="">Nome:</label>
+          <input type="text" v-model="produto.nome" required />
+        </div>
+        <div class="row">
+          <label for="">Preço:</label>
+          <input type="number" v-model="produto.preco" required />
+        </div>
+        <div class="row">
+          <label for="">Quantidade:</label>
+          <input type="number" v-model="produto.quantidade" required />
+        </div>
+        <button type="submit">Mostrar</button>
+      </form>
     </div>
-    <div class="resultado">
+    <div class="resultado" v-if="mostrarResultado">
       <h2>Resultado</h2>
       <p>Nome: {{ produto.nome }}</p>
-      <p>Preço: {{ produto.preco }}</p>
+      <p>Preço: {{ formatarPreco(produto.preco) }}</p>
       <p>Quantidade: {{ produto.quantidade }}</p>
       <p>Categorias: {{ produto.categorias }}</p>
+      <p>{{ mostrarResultado }}</p>
     </div>
   </div>
 </template>
-
 <style scoped>
 .container {
   display: flex;
@@ -36,18 +53,22 @@ const produto = reactive ({
   column-gap: 1.5rem;
   width: 100vw;
 }
-
 .formulario,
 .resultado {
   width: 45%;
   border-radius: 10px;
   padding: 10px;
 }
-
 .resultado {
   background-color: #c4c4c4;
 }
 .formulario {
   background-color: #c4c500;
+}
+.formulario .row {
+  margin: 10px auto;
+  width: 70%;
+  display: flex;
+  justify-content: space-between;
 }
 </style>
